@@ -1,6 +1,6 @@
 // Main Game Loop
 const time = 1000;
-var board = d3.select('svg');
+var board = d3.select('svg.board');
 var enemies = generateEnemies(20);
 
 update(enemies);
@@ -9,19 +9,31 @@ setInterval(function() {
 }, time);
 
 // Player
-d3.select('svg.board')
+var player = board
   .append('circle')
+  .data([{
+    'x': board.attr('width') / 2,
+    'y': board.attr('height') / 2
+  }])
   .classed('player', true)
   .attr('cx', board.attr('width') / 2)
   .attr('cy', board.attr('height') / 2)
   .attr('r', 10)
   .attr('fill', 'red')
-  .attr('stroke', 'black')
+  .attr('stroke', 'grey')
   .attr('stroke-width', 1)
   .attr('opacity', 0)
   .transition()
   .duration(time / 2)
   .attr('opacity', 1);
+
+board.select('.player')
+  .call(d3.behavior.drag()
+    .on('drag', function(d) {
+      d3.select(this)
+        .attr('cx', d.x = d3.event.x)
+        .attr('cy', d.y = d3.event.y);
+    }));
 
 // Enemies
 function generateEnemies (count) {

@@ -4,6 +4,9 @@
   /* overflow:hidden; */
 }
 
+.player {
+  cursor: pointer;
+}
 
 /* your beautiful css styling goes here! */
 
