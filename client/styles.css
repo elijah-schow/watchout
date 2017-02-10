@@ -1,6 +1,4 @@
 .board {
-  width: 600px;
-  height: 600px;
   border: 1px solid #ccc;
   margin: 40px;
   /* overflow:hidden; */
