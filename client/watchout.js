@@ -8,12 +8,23 @@ setInterval(function() {
   update(enemies);
 }, time);
 
+// Collisions
+setInterval(function() {
+  var player = d3.select('svg.board').select('.player').data()[0];
+  enemies.forEach(function(enemy) {
+    if (collision(enemy, player)) {
+      console.log('BOOM!');
+    }
+  });
+}, 20);
+
 // Player
-var player = board
+board
   .append('circle')
   .data([{
     'x': board.attr('width') / 2,
-    'y': board.attr('height') / 2
+    'y': board.attr('height') / 2,
+    'r': 10
   }])
   .classed('player', true)
   .attr('cx', board.attr('width') / 2)
@@ -39,7 +50,7 @@ board.select('.player')
 function generateEnemies (count) {
   var enemies = [];
   for (var index = 0; index < count; index++) {
-    enemies.push( {'id': index} );
+    enemies.push( {'id': index, 'r': 20});
   }
   return enemies;
 }
@@ -47,10 +58,10 @@ function generateEnemies (count) {
 function update (items) {
 
   // Randomize enemy positions
-  items.forEach(function(value, index, collection) {
+  items.forEach(function(value) {
     //Randomize enemy positions
-    collection[index].x = Math.random() * (board.attr('width') - 30) + 15;
-    collection[index].y = Math.random() * (board.attr('height') - 30) + 15;
+    value.x = Math.random() * (board.attr('width') - 30) + 15;
+    value.y = Math.random() * (board.attr('height') - 30) + 15;
   });
 
   // Make a slection
@@ -83,4 +94,14 @@ function update (items) {
     .exit()
     .remove();
 
+}
+
+function collision (obj1, obj2) {
+  var xDiff = obj1.x - obj2.x;
+  var yDiff = obj1.y - obj2.y;
+  var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+  if (distance < obj1.r + obj2.r) {
+    return true;
+  }
+  return false;
 }
