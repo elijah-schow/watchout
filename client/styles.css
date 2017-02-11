@@ -9,13 +9,11 @@
  }
 
 .container {
+  width:800px;
   border: 8px solid #553B2B;
   cursor: none;
-  margin: auto auto;
-  padding: 0;
+  margin: 0 auto;
   position: relative;
-  margin-top: 100px;
-  width: 800px;
 }
 
 .scoreboard {
