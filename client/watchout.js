@@ -2,6 +2,11 @@
 const time = 1000;
 var board = d3.select('svg.board');
 var enemies = generateEnemies(20);
+var scoreboard = {
+  'highScore': 0,
+  'score': 0,
+  'collisions': 0
+};
 
 update(enemies);
 setInterval(function() {  
@@ -11,12 +16,28 @@ setInterval(function() {
 // Collisions
 setInterval(function() {
   var player = d3.select('svg.board').select('.player').data()[0];
+  scoreboard.score += 2;
   enemies.forEach(function(enemy) {
     if (collision(enemy, player)) {
-      console.log('BOOM!');
+      scoreboard.score = 0;
+      scoreboard.collisions++;
     }
   });
+  if (scoreboard.score > scoreboard.highScore) {
+    scoreboard.highScore = scoreboard.score;
+  }
+  d3.select('.highscore')
+    .select('span')
+    .text(scoreboard.highScore);
+  d3.select('.current')
+    .select('span')
+    .text(scoreboard.score);
+  d3.select('.collisions')
+    .select('span')
+    .text(scoreboard.collisions);
 }, 20);
+
+
 
 // Player
 board
@@ -27,9 +48,9 @@ board
     'r': 10
   }])
   .classed('player', true)
-  .attr('cx', board.attr('width') / 2)
-  .attr('cy', board.attr('height') / 2)
-  .attr('r', 10)
+  .attr('cx', d => d.x)
+  .attr('cy', d => d.y)
+  .attr('r', d => d.r)
   .attr('fill', 'red')
   .attr('stroke', 'grey')
   .attr('stroke-width', 1)
@@ -50,7 +71,7 @@ board.select('.player')
 function generateEnemies (count) {
   var enemies = [];
   for (var index = 0; index < count; index++) {
-    enemies.push( {'id': index, 'r': 20});
+    enemies.push( {'id': index, 'r': 15});
   }
   return enemies;
 }
@@ -82,7 +103,7 @@ function update (items) {
     .classed('enemy', true)
     .attr('cx', d => d.x)
     .attr('cy', d => d.y)
-    .attr('r', '15')
+    .attr('r', d => d.r)
     .attr('fill', 'black')
     .attr('opacity', 0)
     .transition()
