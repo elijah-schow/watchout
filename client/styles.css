@@ -4,7 +4,14 @@
   width: 800px;
   height: 600px;
   position: relative;
-  /* overflow:hidden; */
+  overflow:hidden;
+}
+
+.player,
+.enemy {
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .player {
@@ -13,7 +20,6 @@
   height: 20px;
   margin: -10px;
   border-radius: 10px;
-  position: absolute;
   background-color: red;
 }
 
@@ -21,13 +27,11 @@
   width: 30px;
   height: 30px;
   margin: -15px 0 0 -15px;
-  position: fixed;
   background: url('img/boomerang.png') no-repeat;
   background-size: contain;
-  border: 1px solid black;
-  
+  /* border: 1px solid black; */
   animation-name: spin;
-  animation-duration: 1000ms;
+  animation-duration: 250ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
 }

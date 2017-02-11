@@ -7,6 +7,8 @@ var scoreboard = {
   'score': 0,
   'collisions': 0
 };
+var boardWidth = 800;
+var boardHeight = 600;
 
 update(enemies);
 setInterval(function() {  
@@ -41,30 +43,26 @@ setInterval(function() {
 
 // Player
 board
-  .append('circle')
+  .append('div')
   .data([{
-    'x': board.attr('width') / 2,
-    'y': board.attr('height') / 2,
+    'x': boardWidth / 2,
+    'y': boardHeight / 2,
     'r': 10
   }])
   .classed('player', true)
-  .attr('cx', d => d.x)
-  .attr('cy', d => d.y)
-  .attr('r', d => d.r)
-  .attr('fill', 'red')
-  .attr('stroke', 'grey')
-  .attr('stroke-width', 1)
-  .attr('opacity', 0)
+  .style('left', d => d.x + 'px')
+  .style('top', d => d.y + 'px')
+  .style('opacity', 0)
   .transition()
   .duration(time / 2)
-  .attr('opacity', 1);
+  .style('opacity', 1);
 
 board.select('.player')
   .call(d3.behavior.drag()
     .on('drag', function(d) {
       d3.select(this)
-        .attr('cx', d.x = d3.event.x)
-        .attr('cy', d.y = d3.event.y);
+        .style('left', d.x = d3.event.x + 'px')
+        .style('top', d.y = d3.event.y + 'px');
     }));
 
 // Enemies
@@ -81,34 +79,32 @@ function update (items) {
   // Randomize enemy positions
   items.forEach(function(value) {
     //Randomize enemy positions
-    value.x = Math.random() * (board.attr('width') - 30) + 15;
-    value.y = Math.random() * (board.attr('height') - 30) + 15;
+    value.x = Math.random() * ( boardWidth - 30) + 15;
+    value.y = Math.random() * ( boardHeight - 30) + 15;
   });
 
   // Make a slection
   var selection = d3.select('.board')
-    .selectAll('circle.enemy')
+    .selectAll('.enemy')
     .data(items);
 
   // Update enemy positions
   selection.transition()
     .duration(time)
-    .attr('cx', d => d.x)
-    .attr('cy', d => d.y);
+    .style('left', d => d.x + 'px')
+    .style('top', d => d.y + 'px');
 
   // Add new enemies to the board
   selection
     .enter()
     .append('div')
     .classed('enemy', true)
-    .attr('cx', d => d.x)
-    .attr('cy', d => d.y)
-    .attr('r', d => d.r)
-    .attr('fill', 'black')
-    .attr('opacity', 0)
+    .style('left', d => d.x + 'px')
+    .style('top', d => d.y + 'px')
+    .style('opacity', 0)
     .transition()
     .duration(time / 2)
-    .attr('opacity', 1);
+    .style('opacity', 1);
 
   // Remove non-existent enemies
   selection
