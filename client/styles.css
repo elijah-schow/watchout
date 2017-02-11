@@ -10,6 +10,7 @@
 
 .container {
   border: 8px solid #553B2B;
+  cursor: none;
   margin: auto auto;
   padding: 0;
   position: relative;
@@ -25,10 +26,9 @@
   font-size: 1.25em;
   min-width: 10em;
   padding: 1em;
-  left: 0;
   position:absolute;
-  top: 0;
-  z-index: 10;
+  top:0;
+  z-index: 1000;
   /* Fix Ugly Font Rendering*/
   text-rendering: optimizeLegibility !important;
   -webkit-font-smoothing: antialiased !important;
@@ -44,22 +44,13 @@
   font-weight: bold;
   margin-left: 1em;
   text-align: right;
-  z-index:1;
 }
 
 
 .board {
   background: #FCEBB6;
-  cursor: none;
   overflow: hidden;
-  left: 0;
-  position:absolute;
-  top: 0;
-  z-index:-1;
-}
-
-.clear {
-  clear: both;
+  position: relative;
 }
 
 /*
@@ -68,9 +59,7 @@
 
 .player,
 .enemy {
-  left: 0;
   position: absolute;
-  top: 0;
   z-index: 0;
 }
 

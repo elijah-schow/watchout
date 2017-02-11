@@ -100,7 +100,7 @@ d3.select('.player').style({
   height: px(settings.pr * 2)
 });
 
-board.on('mousemove', function() {
+d3.select('.container').on('mousemove', function() {
   var mouse = d3.mouse(this);
   player.x = mouse[0];
   player.y = mouse[1];
