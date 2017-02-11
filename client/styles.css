@@ -8,12 +8,6 @@
   padding: 0;
  }
 
-.container,
-.board {
-  height: 600px;
-  width: 800px;
-}
-
 .container {
   border: 8px solid #553B2B;
   margin: auto auto;
@@ -56,6 +50,7 @@
 
 .board {
   background: #FCEBB6;
+  cursor: none;
   overflow: hidden;
   left: 0;
   position:absolute;
@@ -83,13 +78,12 @@
   background-color: #78C0A8;
   border: 3px solid #499c81;
   border-radius: 13px;
-  cursor: pointer;
+  margin: 11.5px 0 0 11.5px;
   height: 20px;
-  margin: -10px;
   width: 20px;
 }
 
-.player.collided {
+.collided {
   background-color: #F07818;
   border: 3px solid #D8690E;
 }
@@ -102,9 +96,8 @@
   
   background: url('img/boomerang.svg') no-repeat;
   background-size: contain;
-  height: 40px;
-  margin: -20px 0 0 -20px;
-  width: 40px;
+  height: 30px;
+  width: 30px;
 }
 
 @keyframes spin {

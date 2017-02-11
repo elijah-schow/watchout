@@ -1,124 +1,113 @@
-// Main Game Loop
-const time = 1000;
-var board = d3.select('.board');
-var enemies = generateEnemies(20);
-var scoreboard = {
-  'highScore': 0,
-  'score': 0,
-  'collisions': 0
+// settings
+var settings = {
+  w: 800,
+  h: 600,
+  pr: 10,
+  er: 15,
+  interval: 1000,
+  n: 15
 };
-var boardWidth = 800;
-var boardHeight = 600;
 
-update(enemies);
-setInterval(function() {  
-  update(enemies);
-}, time);
+var scoreboard = {
+  score: 0,
+  highscore: 0,
+  collisions: 0
+};
 
-// Collisions
-setInterval(function() {
-  var player = board.select('.player').data()[0];
-  scoreboard.score += 2;
-  enemies.forEach(function(enemy) {
-    if (collision(enemy, player)) {
-      scoreboard.score = 0;
-      scoreboard.collisions++;
+// helpers
+var px = n => n + 'px';
+var generate = {
+  x: n => px(Math.random() * settings.w),
+  y: n => px(Math.random() * settings.h)
+};
+
+// setup board
+var board = d3.select('.board')
+  .style({
+    width: px(settings.w),
+    height: px(settings.h)
+  });
+
+var scoreTicker = function() {
+  scoreboard.highscore = Math.max(scoreboard.score, scoreboard.highscore);
+  d3.select('.scoreboard .current span').text(scoreboard.score);
+  d3.select('.scoreboard .highscore span').text(scoreboard.highscore);
+  d3.select('.scoreboard .collisions span').text(scoreboard.collisions);
+  scoreboard.score++;
+};
+setInterval(scoreTicker, 100);
+
+// setup enemies
+var enemies = board.selectAll('.enemy')
+  .data(d3.range(settings.n))
+  .enter()
+  .append('div') 
+  .classed('enemy', true)
+  .style({
+    left: generate.x,
+    top: generate.y,
+    width: px(settings.er * 2),
+    height: px(settings.er * 2)
+  });
+
+var refresh = function(element) {
+  element
+    .transition()
+    .duration(settings.interval)
+    .style({
+      left: generate.x,
+      top: generate.y
+    }).each('end', function() { 
+      refresh(d3.select(this)); 
+    });
+};
+refresh(enemies);
+
+var colliding = false;
+
+var detectCollisions = function() {
+  var collided = false;
+  board.select('.player').classed('collided', colliding);
+  enemies.each(function() {
+    var xDiff = this.offsetLeft - player.x;
+    var yDiff = this.offsetTop - player.y;
+    var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
+    if (distance < settings.er + settings.pr) {
+      collided = true;
     }
   });
-  if (scoreboard.score > scoreboard.highScore) {
-    scoreboard.highScore = scoreboard.score;
+  if (collided) {
+    scoreboard.score = 0;
+    if (colliding !== collided) {
+      scoreboard.collisions++;
+    }
   }
-  d3.select('.highscore')
-    .select('span')
-    .text(scoreboard.highScore);
-  d3.select('.current')
-    .select('span')
-    .text(scoreboard.score);
-  d3.select('.collisions')
-    .select('span')
-    .text(scoreboard.collisions);
-}, 20);
+  colliding = collided;
+};
+d3.timer(detectCollisions);
 
+// setup player
+var player = {
+  x: settings.w / 2,
+  y: settings.h / 2,
+  r: settings.pr
+};
 
+d3.select('.player').style({
+  left: px(player.x),
+  top: px(player.y),
+  width: px(settings.pr * 2),
+  height: px(settings.pr * 2)
+});
 
-// Player
-board
-  .append('div')
-  .data([{
-    'x': boardWidth / 2,
-    'y': boardHeight / 2,
-    'r': 10
-  }])
-  .classed('player', true)
-  .style('left', d => d.x + 'px')
-  .style('top', d => d.y + 'px')
-  .style('opacity', 0)
-  .transition()
-  .duration(time / 2)
-  .style('opacity', 1);
+board.on('mousemove', function() {
+  var mouse = d3.mouse(this);
+  player.x = mouse[0];
+  player.y = mouse[1];
 
-board.select('.player')
-  .call(d3.behavior.drag()
-    .on('drag', function(d) {
-      d3.select(this)
-        .style('left', d.x = d3.event.x + 'px')
-        .style('top', d.y = d3.event.y + 'px');
-    }));
-
-// Enemies
-function generateEnemies (count) {
-  var enemies = [];
-  for (var index = 0; index < count; index++) {
-    enemies.push( {'id': index, 'r': 15});
-  }
-  return enemies;
-}
-
-function update (items) {
-
-  // Randomize enemy positions
-  items.forEach(function(value) {
-    //Randomize enemy positions
-    value.x = Math.random() * ( boardWidth - 30) + 15;
-    value.y = Math.random() * ( boardHeight - 30) + 15;
+  d3.select('.player').style({
+    left: px( player.x - player.r ),
+    top: px( player.y - player.r )
   });
 
-  // Make a slection
-  var selection = d3.select('.board')
-    .selectAll('.enemy')
-    .data(items);
-
-  // Update enemy positions
-  selection.transition()
-    .duration(time)
-    .style('left', d => d.x + 'px')
-    .style('top', d => d.y + 'px');
-
-  // Add new enemies to the board
-  selection
-    .enter()
-    .append('div')
-    .classed('enemy', true)
-    .style('left', d => d.x + 'px')
-    .style('top', d => d.y + 'px')
-    .style('opacity', 0)
-    .transition()
-    .duration(time / 2)
-    .style('opacity', 1);
-
-  // Remove non-existent enemies
-  selection
-    .exit()
-    .remove();
-
-}
-
-function collision (obj1, obj2) {
-  var xDiff = obj1.x - obj2.x;
-  var yDiff = obj1.y - obj2.y;
-  var distance = Math.sqrt(Math.pow(xDiff, 2) + Math.pow(yDiff, 2));
-  if (distance < obj1.r + obj2.r) {
-    return true;
-  }
-  return false;
-}
+});
