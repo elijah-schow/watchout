@@ -1,39 +1,110 @@
+/*
+ *  User Interface
+ */
+
+ body {
+  background: #5E412F;
+  margin: 0;
+  padding: 0;
+ }
+
+.container,
 .board {
-  border: 1px solid #ccc;
-  margin: 40px;
-  width: 800px;
   height: 600px;
-  position: relative;
-  overflow:hidden;
+  width: 800px;
 }
+
+.container {
+  border: 8px solid #553B2B;
+  margin: auto auto;
+  padding: 0;
+  position: relative;
+  margin-top: 100px;
+  width: 800px;
+}
+
+.scoreboard {
+  background: rgba(94, 65, 47, .9);
+  color: #FAFAFA;
+  display:inline-block;
+  font-family: "Helvetica Neue", Helvetica, Arial, Sans-Serif;
+  font-size: 1.25em;
+  min-width: 10em;
+  padding: 1em;
+  left: 0;
+  position:absolute;
+  top: 0;
+  z-index: 10;
+  /* Fix Ugly Font Rendering*/
+  text-rendering: optimizeLegibility !important;
+  -webkit-font-smoothing: antialiased !important;
+}
+
+.scoreboard div {
+  clear: both;
+}
+
+.scoreboard span {
+  display: block;
+  float: right;
+  font-weight: bold;
+  margin-left: 1em;
+  text-align: right;
+  z-index:1;
+}
+
+
+.board {
+  background: #FCEBB6;
+  overflow: hidden;
+  left: 0;
+  position:absolute;
+  top: 0;
+  z-index:-1;
+}
+
+.clear {
+  clear: both;
+}
+
+/*
+ *  Game
+ */
 
 .player,
 .enemy {
+  left: 0;
   position: absolute;
   top: 0;
-  left: 0;
+  z-index: 0;
 }
 
 .player {
+  background-color: #78C0A8;
+  border: 3px solid #499c81;
+  border-radius: 13px;
   cursor: pointer;
-  width: 20px;
   height: 20px;
   margin: -10px;
-  border-radius: 10px;
-  background-color: red;
+  width: 20px;
+}
+
+.player.collided {
+  background-color: #F07818;
+  border: 3px solid #D8690E;
 }
 
 .enemy {
-  width: 30px;
-  height: 30px;
-  margin: -15px 0 0 -15px;
-  background: url('img/boomerang.png') no-repeat;
-  background-size: contain;
-  /* border: 1px solid black; */
   animation-name: spin;
   animation-duration: 250ms;
   animation-iteration-count: infinite;
   animation-timing-function: linear;
+  
+  background: url('img/boomerang.svg') no-repeat;
+  background-size: contain;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  width: 40px;
 }
 
 @keyframes spin {
