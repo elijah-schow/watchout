@@ -1,15 +1,42 @@
 .board {
   border: 1px solid #ccc;
   margin: 40px;
+  width: 800px;
+  height: 600px;
+  position: relative;
   /* overflow:hidden; */
 }
 
 .player {
   cursor: pointer;
+  width: 20px;
+  height: 20px;
+  margin: -10px;
+  border-radius: 10px;
+  position: absolute;
+  background-color: red;
 }
 
-/* your beautiful css styling goes here! */
+.enemy {
+  width: 30px;
+  height: 30px;
+  margin: -15px 0 0 -15px;
+  position: fixed;
+  background: url('img/boomerang.png') no-repeat;
+  background-size: contain;
+  border: 1px solid black;
+  
+  animation-name: spin;
+  animation-duration: 1000ms;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+}
 
-/* Note: an asteroid image is included in this repo.
-Feel free to use it if you like. */
-
+@keyframes spin {
+    from {
+        transform:rotate(0deg);
+    }
+    to {
+        transform:rotate(360deg);
+    }
+}

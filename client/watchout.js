@@ -1,6 +1,6 @@
 // Main Game Loop
 const time = 1000;
-var board = d3.select('svg.board');
+var board = d3.select('.board');
 var enemies = generateEnemies(20);
 var scoreboard = {
   'highScore': 0,
@@ -15,7 +15,7 @@ setInterval(function() {
 
 // Collisions
 setInterval(function() {
-  var player = d3.select('svg.board').select('.player').data()[0];
+  var player = board.select('.player').data()[0];
   scoreboard.score += 2;
   enemies.forEach(function(enemy) {
     if (collision(enemy, player)) {
@@ -99,7 +99,7 @@ function update (items) {
   // Add new enemies to the board
   selection
     .enter()
-    .append('circle')
+    .append('div')
     .classed('enemy', true)
     .attr('cx', d => d.x)
     .attr('cy', d => d.y)
